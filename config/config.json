@@ -1,0 +1,9 @@
+{
+    "development": {
+        "username": "sparsh",
+        "password": "i5kko79JIjd8qmCv",
+        "database": "healtheasy",
+        "host": "127.0.0.1",
+        "dialect": "mysql"
+    }
+}
