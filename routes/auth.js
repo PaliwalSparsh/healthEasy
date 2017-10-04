@@ -3,29 +3,42 @@ var authController = require('../controller/authcontroller.js')
 module.exports = function(app, passport) {
     app.get('/signup', authController.signup);
     app.get('/signin', authController.signin);
-    app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/signup'
-    }))
-    app.get('/dashboard', isLoggedIn, authController.dashboard);
+    app.get('/patient_dashboard', authController.patientLoggedIn, authController.patientDashboard);
+    app.get('/doctor_dashboard', authController.doctorLoggedIn, authController.doctorDashboard);
+    app.get('/pharmacist_dashboard', authController.pharmacistLoggedIn, authController.pharmacistDashboard);
     app.get('/logout',authController.logout);
-    app.post('/signin', checkUser, passport.authenticate('local-signin', {
-            successRedirect: '/dashboard',
-            failureRedirect: '/signin'
-        }
-    ));
-    app.get('/signupall', authController.signupall);
-    app.get('/signinall', authController.signinall);
-
-    // my function to check value
-    function checkUser(req, res, next) {
-        console.log(req.body);
-        return next();
-    }
-    function isLoggedIn(req, res, next) {
-        // this isAuthenticated is passport function which does req.session.passport.user !== undefined
-        if (req.isAuthenticated())
-            return next();
-        res.redirect('/signin');
-    }
+    app.post('/signin', function(req, res, next) {
+          passport.authenticate('local-signin', function(err, user, info) {
+            if (err) { return next(err); }
+            if (!user) { return res.redirect('/signin'); }
+            req.logIn(user, function(err) {
+                if (err) { return next(err); }
+                if (user.usertype == "doctor") {
+                    return res.redirect('/doctor_dashboard');
+                } else if (user.usertype == "patient") {
+                    return res.redirect('/patient_dashboard');
+                } else if (user.usertype == "pharmacist") {
+                    return res.redirect('/pharmacist_dashboard');
+                } else {
+                }
+        });
+        })(req, res, next);
+    });
+    app.post('/signup', function(req, res, next) {
+          passport.authenticate('local-signup', function(err, user, info) {
+            if (err) { return next(err); }
+            if (!user) { return res.redirect('/signup'); }
+            req.logIn(user, function(err) {
+                if (err) { return next(err); }
+                if (user.usertype == "doctor") {
+                    return res.redirect('/doctor_dashboard');
+                } else if (user.usertype == "patient") {
+                    return res.redirect('/patient_dashboard');
+                } else if (user.usertype == "pharmacist") {
+                    return res.redirect('/pharmacist_dashboard');
+                } else {
+                }
+        });
+        })(req, res, next);
+    });
 }

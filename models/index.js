@@ -31,9 +31,6 @@ Object.keys(db).forEach(function(modelName) {
     }
 });
 
-// scope for one more foreign key from
-db['approval'].belongsTo(db['patient']);
-
 //adding reference to sequalize(config file) and Sequalize class. This is object so passed by reference ;)
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

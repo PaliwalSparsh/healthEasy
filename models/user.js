@@ -8,35 +8,45 @@ module.exports = function(sequelize, Sequelize) {
             type: Sequelize.INTEGER
         },
 
-        firstname: {
+        ssn: {
+            type: Sequelize.INTEGER
+        },
+
+        name: {
             type: Sequelize.STRING,
             notEmpty: true
         },
 
-        lastname: {
+        usertype: {
             type: Sequelize.STRING,
             notEmpty: true
-        },
-
-        username: {
-            type: Sequelize.TEXT
-        },
-
-        about: {
-            type: Sequelize.TEXT
-        },
-
-        email: {
-            type: Sequelize.STRING,
-            validate: {
-                isEmail: true
-            }
         },
 
         password: {
             type: Sequelize.STRING,
             allowNull: false
+        },
+
+        records: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+
+        prescriptions: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+
+        requested: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+
+        requestgranted: {
+            type: Sequelize.STRING,
+            allowNull: true
         }
+
     });
 
     return User;

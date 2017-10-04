@@ -38,7 +38,7 @@ var authRoute = require('./routes/auth.js')(app, passport);
 // can be declared only after models is declared
 require('./config/passport/passport.js')(passport, models.user);
 
-// Syncing database
+// Syncing database, done only once in app.js
 models.sequelize.sync().then(function() {
     console.log("working..");
 }).catch(function(err) {

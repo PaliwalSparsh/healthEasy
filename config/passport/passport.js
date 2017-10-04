@@ -8,9 +8,9 @@
 
   passport.serializeUser(function(user, done) {
           done(null, user.id);
-      });
+  });
 
-  // used to deserialize the user
+  // used to deserialize the user, and put user in req.user
   passport.deserializeUser(function(id, done) {
       User.findById(id).then(function(user) {
         if(user){
@@ -20,35 +20,37 @@
           done(user.errors,null);
         }
       });
-
   });
 
   passport.use('local-signup', new LocalStrategy(
+    // these usernameField and passwordField automatically extract ssn and password from req.body
     {
-      usernameField : 'email',
+      usernameField : 'ssn',
       passwordField : 'password',
       passReqToCallback : true // allows us to pass back the entire request to the callback
     },
 
-    function(req, email, password, done){
+    function(req, ssn, password, done){
       var generateHash = function(password) {
       return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
       };
 
-       User.findOne({where: {email:email}}).then(function(user){
+      User.findOne({where: {ssn: ssn}}).then(function(user){
 
       if(user)
       {
-        return done(null, false, {message : 'That email is already taken'} );
+        return done(null, false, {message : 'That ssn is already taken'} );
       }
       else
       {
         var userPassword = generateHash(password);
         var data =
-        { email:email,
+        { ssn:ssn,
         password:userPassword,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname
+        name: req.body.name,
+        usertype: req.body.usertype,
+        records: req.body.records,
+        prescriptions: req.body.prescriptions,
         };
 
         User.create(data).then(function(newUser,created){
@@ -61,33 +63,32 @@
         });
       }
     });
-
   }
-  ));
+));
 
 
 //LOCAL SIGNIN
 passport.use('local-signin', new LocalStrategy(
     {
         // by default, local strategy uses username and password, we will override with email
-        usernameField: 'email',
+        usernameField: 'ssn',
         passwordField: 'password',
         passReqToCallback: true // allows us to pass back the entire request to the callback
     },
 
-    function(req, email, password, done) {
+    function(req, ssn, password, done) {
         var User = user;
         var isValidPassword = function(userpass, password) {
             return bCrypt.compareSync(password, userpass);
         }
         User.findOne({
             where: {
-                email: email
+                ssn: ssn
             }
         }).then(function(user) {
             if (!user) {
                 return done(null, false, {
-                    message: 'Email does not exist'
+                    message: 'ssn does not exist'
                 });
             }
             if (!isValidPassword(user.password, password)) {
