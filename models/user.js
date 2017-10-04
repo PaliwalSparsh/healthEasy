@@ -36,18 +36,7 @@ module.exports = function(sequelize, Sequelize) {
         password: {
             type: Sequelize.STRING,
             allowNull: false
-        },
-
-        last_login: {
-            type: Sequelize.DATE
-        },
-
-        status: {
-            type: Sequelize.ENUM('active', 'inactive'),
-            defaultValue: 'active'
         }
-
-
     });
 
     return User;

@@ -4,29 +4,46 @@ var passport = require('Passport');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var env = require('dotenv').load();
-var models = require("./models");
+var exphbs = require('express-handlebars');
 
+// bodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-models.sequelize.sync().then(function() {
-    console.log("working..");
-}).catch(function(err) {
-    console.log(err, "Problem connecting with database.")
-});
 
 // For Passport
 // For Session ID passed between browser and server
 app.use(session({ secret: 'keyboard cat',resave: true, saveUninitialized:true})); // session secret
 app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
+app.use(passport.session()); // login sessions
 
+
+//For Handlebars
+app.set('views', './views')
+app.engine('hbs', exphbs({
+    extname: '.hbs'
+}));
+app.set('view engine', '.hbs');
+
+// routes
 app.get('/', function(req, res) {
-
     res.send('Welcome to Passport with Sequelize');
-
 });
 
+//database
+var models = require('./models');
+
+//running func by passing in variable
+var authRoute = require('./routes/auth.js')(app, passport);
+
+// can be declared only after models is declared
+require('./config/passport/passport.js')(passport, models.user);
+
+// Syncing database
+models.sequelize.sync().then(function() {
+    console.log("working..");
+}).catch(function(err) {
+    console.log(err, "Problem connecting with database.")
+});
 
 app.listen(8080, function(err) {
 
