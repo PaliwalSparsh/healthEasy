@@ -89,29 +89,40 @@ exports.updateRequest = function(req, res, next) {
 }
 exports.requestRecord = function(req, res, next) {
         console.log(req.body);
-        User.findOne({where: {ssn: req.body.ssn_patient}}).then(function(user){
-            if(user){
-                var data =
-                {
-                    ssn_patient: req.body.ssn_patient,
-                    ssn_name: user.name,
-                    requester_type: req.body.requester_type,
-                    requester_name: req.body.requester_name,
-                    requester_ssn: req.body.requester_ssn,
-                    approval: "NO"
-                }
-                Request.create(data).then(function(newRequest,created){
-                    if(req.body.requester_type == "doctor") {
-                        res.redirect('/doctor_dashboard');
-                    }else{
-                        res.redirect('/pharmacist_dashboard');
-                    }
-
-                });
+        var redirect = function(){
+            if(req.body.requester_type == "doctor") {
+                res.redirect('/doctor_dashboard');
+            }else{
+                res.redirect('/pharmacist_dashboard');
             }
-        });
-
-}
+        }
+        //logic to ensure there are no duplicate entries one with YES and other with NO
+        Request.findOne({where: {ssn_patient: req.body.ssn_patient,
+         requester_ssn: req.body.requester_ssn}}).then(function(request) {
+            if(request) {
+                redirect();
+            } else {
+                User.findOne({where: {ssn: req.body.ssn_patient}}).then(function(user){
+                    if(user){
+                        var data =
+                        {
+                            ssn_patient: req.body.ssn_patient,
+                            ssn_name: user.name,
+                            requester_type: req.body.requester_type,
+                            requester_name: req.body.requester_name,
+                            requester_ssn: req.body.requester_ssn,
+                            approval: "NO"
+                        }
+                        Request.create(data).then(function(newRequest,created){
+                            redirect();
+                        })
+                    }else{
+                        redirect();
+                    }
+                })
+            }
+        })
+    }
 
 exports.openRecords = function(req, res, next) {
     User.findOne({where: {ssn: req.body.ssn_patient}}).then(function(user){
