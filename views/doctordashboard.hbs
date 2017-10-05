@@ -1,10 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Doctor's Dashboard</title>
+    <title>{{user.name}}'s Dashboard</title>
 </head>
 <body>
-    <h2>Doctor's Dashboard</h2>
-    <h5>Hurray! you are logged in.</h5>
+    <h1>{{user.name}} DASHBOARD | Doctor</h1>
+
+        <h2>Your Patients</h2>
+        {{#each my_patients}}
+            <form method="post" action="/openRecords">
+                <label for="open">{{ssn_name}}</label>
+                <input type="submit" name="open" value="open">
+                <input type="hidden" name="ssn_patient" value="{{ssn_patient}}">
+            </form>
+        {{/each}}
+
+        <h2>Records</h2>
+        <div></div>
+        <h2>User's Prescriptions</h2>
+        <div></div>
+        <h2>Record and Prescription Requests</h2>
+
+
+        <h2>Request Records</h2>
+        <form method="post" action="/requestRecord">
+            <input class="text" name="ssn_patient" type="text"/>
+            <input type="hidden" name="requester_type" value="{{user.usertype}}" />
+            <input type="hidden" name="requester_name" value="{{user.name}}" />
+            <input type="hidden" name="requester_ssn" value="{{user.ssn}}" />
+            <input type="submit" value="Request Record">
+        </form>
+
+        <a href="/logout">Logout</a>
 </body>
 </html>

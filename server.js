@@ -26,7 +26,7 @@ app.set('view engine', '.hbs');
 
 // routes
 app.get('/', function(req, res) {
-    res.send('Welcome to Passport with Sequelize');
+    res.send('Welcome to HealthEasy <br> <a href="/signin">Signin</a> <br> <a href="/signup">Signup</a>');
 });
 
 //database

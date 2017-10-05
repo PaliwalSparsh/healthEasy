@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{user.name}}'s Data</title>
+</head>
+<body>
+    <h1>{{user.name}}'s Data</h1>
+    <form method="post" action="/updateRecord">
+        <div>
+            <h2>Records</h2>
+            <textarea name="records">{{user.records}}</textarea>
+        </div>
+        <div>
+            <h2>Prescription</h2>
+            <textarea name="prescriptions">{{user.prescriptions}}</textarea>
+        </div>
+        <input type="hidden" name="ssn" value="{{user.ssn}}">
+        <input type="submit" value="Update">
+    </form>
+
+    <a href="/doctor_dashboard">Back to dashboard</a>
+</body>
+</html>

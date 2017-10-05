@@ -1,5 +1,6 @@
 var models = require('../models');
 var User = models.user;
+var Request = models.request;
 
 var exports = module.exports = {}
 exports.signup = function (req, res) {
@@ -9,10 +10,29 @@ exports.signin = function(req, res) {
     res.render('signinall')
 }
 exports.patientDashboard = function(req, res) {
-    res.render('patientdashboard');
+    Request.findAll({
+    where:{ ssn_patient: req.user.ssn, approval: "NO"}
+    }).then(function (s) {
+        var request_arr = []
+        s.forEach(function(e){
+            request_arr.push(e.dataValues)
+        });
+        console.log(request_arr)
+        res.render('patientdashboard', {user: req.user, request: request_arr});
+    });
 }
+
 exports.doctorDashboard = function(req, res) {
-    res.render('doctordashboard');
+    Request.findAll({
+    where:{ requester_ssn: req.user.ssn, approval: "YES"}
+    }).then(function (s) {
+        var my_patients = []
+        s.forEach(function(e){
+            my_patients.push(e.dataValues)
+        });
+        console.log(my_patients)
+        res.render('doctordashboard', {user: req.user, my_patients: my_patients});
+    });
 }
 exports.pharmacistDashboard = function(req, res) {
     res.render('pharmdashboard');
@@ -49,3 +69,47 @@ exports.pharmacistLoggedIn =  function(req, res, next) {
             res.redirect('/signin');
         }
     }
+exports.updateRequest = function(req, res, next) {
+    var updateValue = {approval: "YES"};
+    Request.update(updateValue, {where: {id: req.body.id}}).then(function(result){
+        res.redirect('/patient_dashboard');
+    })
+}
+exports.requestRecord = function(req, res, next) {
+        console.log(req.body);
+        User.findOne({where: {ssn: req.body.ssn_patient}}).then(function(user){
+            if(user){
+                var data =
+                {
+                    ssn_patient: req.body.ssn_patient,
+                    ssn_name: user.name,
+                    requester_type: req.body.requester_type,
+                    requester_name: req.body.requester_name,
+                    requester_ssn: req.body.requester_ssn,
+                    approval: "NO"
+                }
+                Request.create(data).then(function(newRequest,created){
+                    res.redirect('/doctor_dashboard');
+                });
+            }
+        });
+
+}
+
+exports.openRecords = function(req, res, next) {
+    User.findOne({where: {ssn: req.body.ssn_patient}}).then(function(user){
+                if(user){
+                    res.render('recordandpres', {user: user})
+                } else {
+                    res.send('Patient data not present <a href = "/doctor_dashboard">Back</a>');
+                }
+
+                })
+}
+
+exports.updateRecord = function(req, res, next) {
+    var updateValue = {records: req.body.records,prescriptions: req.body.prescriptions};
+    User.update(updateValue, {where: {ssn: req.body.ssn}}).then(function(result){
+        res.redirect('/doctor_dashboard');
+    })
+}

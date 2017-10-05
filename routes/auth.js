@@ -41,4 +41,13 @@ module.exports = function(app, passport) {
         });
         })(req, res, next);
     });
+    // Turns approval to YES, used in patient dashboard
+    app.post('/updateRequest',authController.updateRequest);
+    // From doctordashboard Requests for patients approval, used in doctor dashboard
+    app.post('/requestRecord',authController.requestRecord);
+    // Open Records of Patient, used in doctor dashboard
+    app.post('/openRecords', authController.openRecords);
+    // Updating of record by doctor
+    app.post('/updateRecord', authController.updateRecord);
+
 }

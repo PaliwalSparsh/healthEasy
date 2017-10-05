@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User's Dashboard</title>
+    <title>{{user.name}}'s Dashboard</title>
 </head>
 <body>
-    <h2>User's Dashboard</h2>
-    <h5>Hurray! you are logged in.</h5>
+    <h1>{{user.name}} DASHBOARD | Patient</h1>
+    <h2>Records</h2>
+    <div>{{user.records}}</div>
+    <h2>User's Prescriptions</h2>
+    <div>{{user.prescriptions}}</div>
+    <h2>Record and Prescription Requests</h2>
+    <div>
+        {{#each request}}
+            <form method="post" action="/updateRequest">
+                <label for="yes">{{requester_name}}</label>
+                <input type="submit" name="yes" value="Yes">
+                <input type="hidden" name="id" value="{{id}}">
+            </form>
+        {{/each}}
+    </div>
+    <a href="/logout">Logout</a>
 </body>
 </html>
