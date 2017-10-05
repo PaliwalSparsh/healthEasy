@@ -7,6 +7,7 @@ module.exports = function(app, passport) {
     app.get('/doctor_dashboard', authController.doctorLoggedIn, authController.doctorDashboard);
     app.get('/pharmacist_dashboard', authController.pharmacistLoggedIn, authController.pharmacistDashboard);
     app.get('/logout',authController.logout);
+    app.get('/home', authController.home);
     app.post('/signin', function(req, res, next) {
           passport.authenticate('local-signin', function(err, user, info) {
             if (err) { return next(err); }
@@ -49,5 +50,7 @@ module.exports = function(app, passport) {
     app.post('/openRecords', authController.openRecords);
     // Updating of record by doctor
     app.post('/updateRecord', authController.updateRecord);
+    // Open Prescription of Patient, used in prescription dashboard
+    app.post('/openPrescription', authController.openPrescription);
 
 }

@@ -1,36 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>{{user.name}}'s Dashboard</title>
-</head>
+    {{> head}}
 <body>
-    <h1>{{user.name}} DASHBOARD | Doctor</h1>
-
-        <h2>Your Patients</h2>
-        {{#each my_patients}}
-            <form method="post" action="/openRecords">
-                <label for="open">{{ssn_name}}</label>
-                <input type="submit" name="open" value="open">
-                <input type="hidden" name="ssn_patient" value="{{ssn_patient}}">
-            </form>
-        {{/each}}
-
-        <h2>Records</h2>
-        <div></div>
-        <h2>User's Prescriptions</h2>
-        <div></div>
-        <h2>Record and Prescription Requests</h2>
-
-
-        <h2>Request Records</h2>
-        <form method="post" action="/requestRecord">
-            <input class="text" name="ssn_patient" type="text"/>
-            <input type="hidden" name="requester_type" value="{{user.usertype}}" />
-            <input type="hidden" name="requester_name" value="{{user.name}}" />
-            <input type="hidden" name="requester_ssn" value="{{user.ssn}}" />
-            <input type="submit" value="Request Record">
-        </form>
-
-        <a href="/logout">Logout</a>
+    {{> header}}
+    <div class="container">
+        <row>
+            <h3 style="margin-top:30px">{{user.name}} DASHBOARD | Doctor</h3><a href="/logout">Logout</a>
+        </row>
+        <row>
+            <div class="card" style="margin: 20px">
+                <div class="card-body">
+                    <h4 class="card-title">Your Patients</h4>
+                    {{#each my_patients}}
+                        <div style="padding:4px;">
+                            <form method="post" action="/openRecords">
+                                <label for="open">{{ssn_name}}</label>
+                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                <input type="submit" name="open" value="open" class="btn btn-success">
+                                <input type="hidden" name="ssn_patient" value="{{ssn_patient}}">
+                            </form>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        </row>
+        <row>
+            <div class="card" style="margin: 20px">
+                <div class="card-body">
+                    <h4 class="card-title">Request Records</h4>
+                    <form method="post" action="/requestRecord">
+                        <div class="form-group">
+                            <label for="ssn_patient">Enter SSN of the patient: </label>
+                            <input class="form-control" name="ssn_patient" type="text"/>
+                        </div>
+                        <input type="hidden" name="requester_type" value="{{user.usertype}}" />
+                        <input type="hidden" name="requester_name" value="{{user.name}}" />
+                        <input type="hidden" name="requester_ssn" value="{{user.ssn}}" />
+                        <input type="submit" value="Request Record and Prescription" class="btn btn-primary">
+                    </form>
+                </div>
+            </div>
+        </row>
+    </div>
+    {{> footer}}
+    {{> scripts}}
 </body>
 </html>

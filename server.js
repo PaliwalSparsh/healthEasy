@@ -17,6 +17,8 @@ app.use(passport.initialize());
 app.use(passport.session()); // login sessions
 
 
+app.use(express.static(__dirname + '/static'));
+
 //For Handlebars
 app.set('views', './views')
 app.engine('hbs', exphbs({
@@ -26,7 +28,7 @@ app.set('view engine', '.hbs');
 
 // routes
 app.get('/', function(req, res) {
-    res.send('Welcome to HealthEasy <br> <a href="/signin">Signin</a> <br> <a href="/signup">Signup</a>');
+    res.redirect('/home');
 });
 
 //database

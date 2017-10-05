@@ -9,6 +9,9 @@ exports.signup = function (req, res) {
 exports.signin = function(req, res) {
     res.render('signinall')
 }
+exports.home = function(req, res) {
+    res.render('home')
+}
 exports.patientDashboard = function(req, res) {
     Request.findAll({
     where:{ ssn_patient: req.user.ssn, approval: "NO"}
@@ -35,7 +38,16 @@ exports.doctorDashboard = function(req, res) {
     });
 }
 exports.pharmacistDashboard = function(req, res) {
-    res.render('pharmdashboard');
+    Request.findAll({
+    where:{ requester_ssn: req.user.ssn, approval: "YES"}
+    }).then(function (s) {
+        var my_customer = []
+        s.forEach(function(e){
+            my_customer.push(e.dataValues)
+        });
+        console.log(my_customer)
+        res.render('pharmdashboard', {user: req.user, my_customer: my_customer});
+    });
 }
 exports.logout = function(req, res) {
     req.session.destroy(function(err) {
@@ -89,7 +101,12 @@ exports.requestRecord = function(req, res, next) {
                     approval: "NO"
                 }
                 Request.create(data).then(function(newRequest,created){
-                    res.redirect('/doctor_dashboard');
+                    if(req.body.requester_type == "doctor") {
+                        res.redirect('/doctor_dashboard');
+                    }else{
+                        res.redirect('/pharmacist_dashboard');
+                    }
+
                 });
             }
         });
@@ -112,4 +129,15 @@ exports.updateRecord = function(req, res, next) {
     User.update(updateValue, {where: {ssn: req.body.ssn}}).then(function(result){
         res.redirect('/doctor_dashboard');
     })
+}
+
+exports.openPrescription = function(req, res, next) {
+    User.findOne({where: {ssn: req.body.ssn_patient}}).then(function(user){
+            if(user){
+                res.render('pres', {user: user})
+            } else {
+                res.send('Patient data not present <a href = "/pharmacist_dashboard">Back</a>');
+            }
+
+            })
 }

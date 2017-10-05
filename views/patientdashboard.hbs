@@ -1,24 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>{{user.name}}'s Dashboard</title>
-</head>
+{{> head}}
 <body>
-    <h1>{{user.name}} DASHBOARD | Patient</h1>
-    <h2>Records</h2>
-    <div>{{user.records}}</div>
-    <h2>User's Prescriptions</h2>
-    <div>{{user.prescriptions}}</div>
-    <h2>Record and Prescription Requests</h2>
-    <div>
-        {{#each request}}
-            <form method="post" action="/updateRequest">
-                <label for="yes">{{requester_name}}</label>
-                <input type="submit" name="yes" value="Yes">
-                <input type="hidden" name="id" value="{{id}}">
-            </form>
-        {{/each}}
+    {{> header}}
+    <div class="container">
+        <row>
+            <h3 style="margin-top:30px">{{user.name}} DASHBOARD | Patient</h3><a href="/logout">Logout</a>
+        </row>
+        <row>
+            <div class="card" style="margin: 20px">
+                <div class="card-body">
+                    <h4 class="card-title">Your Record</h4>
+                    <p class="card-text">{{user.records}}</p>
+                </div>
+            </div>
+        </row>
+        <row>
+            <div class="card" style="margin: 20px">
+                <div class="card-body">
+                    <h4 class="card-title">Your Prescription</h4>
+                    <p class="card-text">{{user.prescriptions}}</p>
+                </div>
+            </div>
+        </row>
+        <row>
+            <div class="card" style="margin: 20px">
+                <div class="card-body">
+                    <h4 class="card-title">Record and Prescription Requests</h4>
+                    {{#each request}}
+                    <div style="padding:4px;">
+                        <form method="post" action="/updateRequest">
+                            <label for="yes">{{requester_name}}</label>
+                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                            <input type="submit" name="yes" value="Give Approval" class="btn btn-warning">
+                            <input type="hidden" name="id" value="{{id}}">
+                        </form>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </row>
     </div>
-    <a href="/logout">Logout</a>
+    {{> footer}}
+    {{> scripts}}
 </body>
 </html>

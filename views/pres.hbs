@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+{{> head}}
+<body>
+    {{> header}}
+    <div class="container">
+        <div class="card" style="margin: 80px">
+            <div class="card-body">
+                <h2 class="card-title">{{user.name}}'s Prescription</h2>
+                <p class="card-text">{{user.prescriptions}}</p>
+                <a href="/pharmacist_dashboard" class="card-link">Back to dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    {{> footer}}
+    {{> scripts}}
+</body>
+</html>

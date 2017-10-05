@@ -1,71 +1,76 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <title>Signup</title>
-    <script type="text/javascript">
-        function formtype() {
-            var e = document.getElementById("type-select");
-            var type = e.options[e.selectedIndex].value;
-            console.log(type);
-            if(type == "patient") {
-                document.getElementById("patient-props").style.display = "block";
-                // using disabled so that these properties are not sent to server with form
-                document.getElementById("records").disabled = false;
-                document.getElementById("prescriptions").disabled = false;
-            }
-            else if (type == "doctor") {
-                document.getElementById("patient-props").style.display = "None";
-                document.getElementById("records").disabled = true;
-                document.getElementById("prescriptions").disabled = true;
-            }
-            else {
-                document.getElementById("patient-props").style.display = "None";
-                document.getElementById("records").disabled = true;
-                document.getElementById("prescriptions").disabled = true;
-            }
+{{> head}}
+<script type="text/javascript">
+    function formtype() {
+        var e = document.getElementById("type-select");
+        var type = e.options[e.selectedIndex].value;
+        console.log(type);
+        if(type == "patient") {
+            document.getElementById("patient-props").style.display = "block";
+            // using disabled so that these properties are not sent to server with form
+            document.getElementById("records").disabled = false;
+            document.getElementById("prescriptions").disabled = false;
         }
-    </script>
-</head>
+        else if (type == "doctor") {
+            document.getElementById("patient-props").style.display = "None";
+            document.getElementById("records").disabled = true;
+            document.getElementById("prescriptions").disabled = true;
+        }
+        else {
+            document.getElementById("patient-props").style.display = "None";
+            document.getElementById("records").disabled = true;
+            document.getElementById("prescriptions").disabled = true;
+        }
+    }
+</script>
 <body>
-    <form id="signup" name="signup" method="post" action="/signup">
-        <div class="form-group col-md-6">
-            <label for="usertype" class="col-md-3">User Type</label>
-            <select id="type-select" name="usertype" class="col-md-3" onchange="formtype()">
-                <option value="patient">Patient</option>
-                <option value="doctor">Doctor</option>
-                <option value="pharmacist">Pharmacist</option>
-            </select>
-        </div>
-        <div class="form-group col-md-6">
-        <label for="ssn" class="col-md-3">SSN</label>
-        <input class="text" name="ssn" type="text" class="col-md-3"/>
-        </div>
-        <div class="form-group col-md-6">
-        <label for="name" class="col-md-3">Name</label>
-        <input name="name" type="text" class="col-md-3"/>
-        </div>
-        <div class="form-group col-md-6">
-        <label for="password" class="col-md-3">Password</label>
-        <input name="password" type="password" class="col-md-3"/>
-        </div>
-        <div id = "patient-props" class="form-group col-md-6">
-            <div>
-                    <label for="records" class="col-md-3">Records</label>
-                    <textarea id ="records" cols="86" rows ="20" name="records" class="col-md-3"></textarea>
+    {{> header}}
+    <div class="container">
+        <div class="card" style="margin: 80px">
+
+            <div class="card-body">
+                <h2 class="card-title">SIGNUP</h2>
+                <form id="signup" name="signup" method="post" action="/signup">
+                    <div class="form-group ">
+                        <label for="usertype">User Type</label>
+                        <select id="type-select" name="usertype" onchange="formtype()" class="form-control">
+                            <option value="patient">Patient</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="pharmacist">Pharmacist</option>
+                        </select>
+                    </div>
+                    <div class="form-group ">
+                        <label for="ssn">SSN</label>
+                        <input name="ssn" type="text" class="form-control"/>
+                    </div>
+                    <div class="form-group ">
+                        <label for="name">Name</label>
+                        <input name="name" type="text" class="form-control"/>
+                    </div>
+                    <div class="form-group ">
+                        <label for="password">Password</label>
+                        <input name="password" type="password" class="form-control"/>
+                    </div>
+                    <div id = "patient-props" class="form-group ">
+                        <div>
+                                <label for="records">Records</label>
+                                <textarea id ="records" cols="20" rows ="5" name="records" class="form-control"></textarea>
+                        </div>
+                        <div>
+                                <label for="prescriptions">Prescriptions</label>
+                                <textarea id ="prescriptions" cols="20" rows ="5" name="prescriptions" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                    <input type="submit" value="Sign Up" class="btn btn-primary form-control"/>
+                    </div>
+                </form>
+                <a href="/signin" class="card-link">Signin</a>
             </div>
-            <div>
-                    <label for="prescriptions" class="col-md-3">Prescriptions</label>
-                    <textarea id ="prescriptions" cols="86" rows ="20" name="prescriptions" class="col-md-3"></textarea>
-            </div>
         </div>
-        <div class="form-group col-md-6">
-        <input class="btn" type="submit" value="Sign Up" />
-        </div>
-    </form>
-    <a href="/signin">Signin</a>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    </div>
+    {{> footer}}
+    {{> scripts}}
 </body>
 </html>
